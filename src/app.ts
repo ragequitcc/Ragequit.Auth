@@ -15,13 +15,13 @@ app.use(express.json());
 app.use(morgan(config.mode === 'development' ? 'dev' : 'tiny'));
 app.use(router);
 
-router.use((req: Request, res: Response) => {
-  res
-    .send({
-      error: 'not found',
-      code: 404,
-    })
-    .status(404);
-});
+// router.use((req: Request, res: Response) => {
+//   res
+//     .send({
+//       error: 'not found',
+//       code: 404,
+//     })
+//     .status(404);
+// });
 
 app.listen(config.port);

@@ -1,21 +1,44 @@
-import mongoose from 'mongoose';
-import UserSchema from './models/userModel';
+import { Sequelize, Model, DataTypes, Optional } from 'sequelize';
 import config from '../util/config';
 
-mongoose.connect(`mongodb://${config.db.host}/${config.db.name}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-  authSource: 'admin',
-  user: config.db.user,
-  pass: config.db.pass,
+const sequelize: Sequelize = new Sequelize(
+  config.db.name,
+  config.db.user,
+  config.db.pass,
+  {
+    host: config.db.host,
+    port: Number(config.db.port),
+    dialect: 'mariadb',
+    logging: config.mode === 'development' ? console.log : false,
+  }
+);
+
+const User = sequelize.define('user', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  hash: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  id: {
+    type: DataTypes.UUID,
+    primaryKey: true,
+  },
 });
-interface UserInterface {
-  _id: string;
-  name: string;
-  hash: string;
-}
-const User = mongoose.model<UserInterface>('User', UserSchema);
+
+setTimeout(() => {
+  sequelize
+    .sync({ force: true })
+    .then(() => {
+      console.log('Tables Synced.');
+    })
+    .catch((error) => {
+      console.log('Error Syncing Tables.');
+    });
+}, 2500);
 
 export { User };

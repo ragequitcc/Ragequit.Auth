@@ -1,8 +1,7 @@
 import Route from './routeInterface';
-import { User } from '../data/authDb';
 import { comparePassword } from '../util/crypto';
-
 import { Request, Response, Router } from 'express';
+import { User } from '../data/authDb';
 
 const loginRoute: Route = (router: Router) => {
   router.post('/login', async (req: Request, res: Response) => {
@@ -12,26 +11,25 @@ const loginRoute: Route = (router: Router) => {
       });
 
     // logic to lookup user.
-    User.findOne({
-      name: req.body.name,
-    }).then((user) => {
-      if (user === null)
-        return res.send({
-          error: 'User Not Found',
-        });
+    return User.findOne({
+      where: {
+        name: req.body.name,
+      },
+    })
+      .then((user) => {
+        if (!user)
+          return res.send({
+            error: 'User Not Found',
+          });
 
-      comparePassword(req.body.pass, user.hash).then((result) => {
-        if (result) {
-          res.send({
-            message: 'success',
-          });
-        } else {
-          res.send({
-            error: 'Wrong Username Or Password',
-          });
-        }
+        res.send({
+          message: 'Success',
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.send(error);
       });
-    });
   });
 };
 
