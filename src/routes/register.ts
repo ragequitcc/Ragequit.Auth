@@ -18,10 +18,16 @@ const registerRoute: Route = (router: Router) => {
         pass: hash,
       });
 
-      user.save();
+      user.save().then((result) => {
+        res.send({
+          message: 'User Created'
+        })
+      }).catch((error) => {
+        res.send({
+          error: 'Name Already In Use'
+        })
+      });
     });
-
-    res.send('ok');
   });
 };
 

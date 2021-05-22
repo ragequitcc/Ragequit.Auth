@@ -5,6 +5,7 @@ WORKDIR /usr/src/auth
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY src/ ./src
+COPY .env ./
 
 RUN npm install
 

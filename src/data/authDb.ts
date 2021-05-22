@@ -11,7 +11,11 @@ mongoose.connect(`mongodb://${config.db.host}/${config.db.name}`, {
   user: config.db.user,
   pass: config.db.pass,
 });
-
-const User = mongoose.model('User', UserSchema);
+interface UserInterface {
+  _id: string;
+  name: string;
+  pass: string;
+}
+const User = mongoose.model<UserInterface>('User', UserSchema);
 
 export { User };
