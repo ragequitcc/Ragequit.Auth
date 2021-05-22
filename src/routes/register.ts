@@ -18,26 +18,35 @@ const registerRoute: Route = (router: Router) => {
         hash: hash,
       });
 
-      user.save().then((result) => {
-        res.send({
-          message: 'User Created'
+      user
+        .save()
+        .then((result) => {
+          res.send({
+            message: 'User Created',
+          });
         })
-      }).catch((error) => {
-        console.log(error);
-        if(error.code === 11000) {
-          res.send({
-            error: 'Name Already In Use'
-          }).status(403);
-        } else if (error) {
-          res.send({
-            error: 'Unkown Error. Please Try Again Later'
-          }).status(503);
-        } else {
-          res.send({
-            message: 'User Created'
-          }).status(201);
-        }
-      });
+        .catch((error) => {
+          console.log(error);
+          if (error.code === 11000) {
+            res
+              .send({
+                error: 'Name Already In Use',
+              })
+              .status(403);
+          } else if (error) {
+            res
+              .send({
+                error: 'Unkown Error. Please Try Again Later',
+              })
+              .status(503);
+          } else {
+            res
+              .send({
+                message: 'User Created',
+              })
+              .status(201);
+          }
+        });
     });
   });
 };

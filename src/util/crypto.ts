@@ -17,7 +17,10 @@ interface ComparePassword {
   (password: string, hash: string): Promise<boolean>;
 }
 
-const comparePassword: ComparePassword = async (password: string, hash: string) => {
+const comparePassword: ComparePassword = async (
+  password: string,
+  hash: string
+) => {
   const result = await bcrypt.compare(password, hash);
 
   return result;
