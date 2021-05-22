@@ -20,7 +20,7 @@ const loginRoute: Route = (router: Router) => {
           error: 'User Not Found',
         });
 
-      comparePassword(req.body.pass, user.pass).then((result) => {
+      comparePassword(req.body.pass, user.hash).then((result) => {
         if (result) {
           res.send({
             message: 'success',

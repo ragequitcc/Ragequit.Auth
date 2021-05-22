@@ -14,7 +14,7 @@ mongoose.connect(`mongodb://${config.db.host}/${config.db.name}`, {
 interface UserInterface {
   _id: string;
   name: string;
-  pass: string;
+  hash: string;
 }
 const User = mongoose.model<UserInterface>('User', UserSchema);
 

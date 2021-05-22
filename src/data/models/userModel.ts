@@ -10,7 +10,7 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
-    pass: {
+    hash: {
       type: String,
       required: true,
     },

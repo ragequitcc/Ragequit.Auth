@@ -15,7 +15,7 @@ const registerRoute: Route = (router: Router) => {
       const user = new User({
         _id: uuidv4(),
         name: req.body.name,
-        pass: hash,
+        hash: hash,
       });
 
       user.save().then((result) => {
@@ -23,9 +23,20 @@ const registerRoute: Route = (router: Router) => {
           message: 'User Created'
         })
       }).catch((error) => {
-        res.send({
-          error: 'Name Already In Use'
-        })
+        console.log(error);
+        if(error.code === 11000) {
+          res.send({
+            error: 'Name Already In Use'
+          }).status(403);
+        } else if (error) {
+          res.send({
+            error: 'Unkown Error. Please Try Again Later'
+          }).status(503);
+        } else {
+          res.send({
+            message: 'User Created'
+          }).status(201);
+        }
       });
     });
   });
