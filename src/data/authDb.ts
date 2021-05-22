@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import UserSchema from './models/userModel';
 import config from '../util/config';
 
-mongoose.connect('mongodb://localhost/auth', {
+mongoose.connect(`mongodb://${config.db.host}/${config.db.name}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
