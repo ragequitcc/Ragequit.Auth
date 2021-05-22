@@ -1,7 +1,7 @@
 import Route from './routeInterface';
-import {User} from '../data/authDb';
+import { User } from '../data/authDb';
 import { v4 as uuidv4 } from 'uuid';
-import {encrypt} from '../util/crypto';
+import { encrypt } from '../util/crypto';
 
 import { Request, Response, Router } from 'express';
 

@@ -5,27 +5,24 @@ interface Encrypt {
 }
 
 const encrypt: Encrypt = async (data: string) => {
-    const saltRounds: number = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
+  const saltRounds: number = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
 
-    const hash = await bcrypt.hash(data, salt).then((hash) => {
-        return hash;
-    });
-
+  const hash = await bcrypt.hash(data, salt).then((hash) => {
     return hash;
+  });
+
+  return hash;
 };
 
 interface Decrypt {
-    (data: string, hash: string) : Promise<boolean>;
+  (data: string, hash: string): Promise<boolean>;
 }
 
 const decrypt: Decrypt = async (data: string, hash: string) => {
-    const result = await bcrypt.compare(data, hash);
+  const result = await bcrypt.compare(data, hash);
 
-    return result;
-}
+  return result;
+};
 
-export {
-    encrypt,
-    decrypt
-}
+export { encrypt, decrypt };

@@ -1,5 +1,5 @@
 import Route from './routeInterface';
-import {User} from '../data/authDb';
+import { User } from '../data/authDb';
 
 import { Request, Response, Router } from 'express';
 
