@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { RouteInterface, UserInterface } from '../types';
 import bcrypt from 'bcrypt';
 import { User } from '../data/db';
+import { addLog } from '../util/log';
+import jwt from 'jsonwebtoken';
 
 const route: RouteInterface = {
   method: 'post',
@@ -30,13 +32,38 @@ const route: RouteInterface = {
         // make password comparison.
         const compare = await bcrypt.compare(request.body.pass, user.hash);
 
-        console.log(compare);
+        if (compare) {
+          const token = await jwt.sign(
+            {
+              user: {
+                name: user.name,
+                roles: [],
+              },
+            },
+            // @ts-ignore
+            process.env.JWT_SECRET
+          );
 
-        response.send('ok');
+          response.send({
+            status: 'Success',
+            token: token,
+          });
+        } else {
+          response.send({
+            status: 'Error',
+            message: 'Password Does Not Match.',
+          });
+        }
       })
-      .catch((error) => {});
-
-    response.send('nice');
+      .catch((error) => {
+        addLog(error);
+        response
+          .send({
+            status: 'Error',
+            message: 'Something Went Wrong.',
+          })
+          .status(500);
+      });
   },
 };
 

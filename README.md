@@ -1,3 +1,1 @@
-ExpressJS Server using https://www.ory.sh/hydra/docs/
-
-Use Editorconfig plugin in VSCode.
+Basic AUTH API with JWT.

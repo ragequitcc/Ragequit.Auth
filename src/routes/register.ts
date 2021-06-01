@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { RouteInterface, UserInterface } from '../types';
 import bcrypt from 'bcrypt';
 import { User } from '../data/db';
+import { addLog } from '../util/log';
 
 const route: RouteInterface = {
   method: 'post',
@@ -48,6 +49,8 @@ const route: RouteInterface = {
             })
             .status(403);
         } else {
+          addLog(error);
+
           response
             .send({
               status: 'Error',

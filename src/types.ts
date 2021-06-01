@@ -12,6 +12,11 @@ export interface UserInterface {
   hash: string;
 }
 
+export interface LogInterface {
+  id?: number;
+  log: object;
+}
+
 export interface SuccessResponse {
   status: string;
   message: string;
@@ -20,4 +25,11 @@ export interface SuccessResponse {
 export interface ErrorResponse {
   status: string;
   message: string;
+}
+
+export interface DecodedJWTInterface {
+  user: {
+    name: string;
+    roles: string[];
+  };
 }

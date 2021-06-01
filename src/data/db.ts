@@ -1,12 +1,14 @@
 import { Sequelize, Model, Optional, DataTypes } from 'sequelize';
-import { UserInterface } from '../types';
+import { UserInterface, LogInterface } from '../types';
 
 const sequelize: Sequelize = new Sequelize(
-  process.env.DBNAME ?? 'ragequit_auth',
-  process.env.DBUSER ?? 'root',
-  process.env.DBPASS ?? 'root',
+  // @ts-ignore
+  process.env.DBNAME,
+  process.env.DBUSER,
+  process.env.DBPASS,
   {
-    host: process.env.DBHOST ?? 'localhost',
+    // @ts-ignore
+    host: process.env.DBHOST,
     port: Number(process.env.DBPORT) ?? 3306,
     dialect: 'mariadb',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
@@ -44,7 +46,7 @@ const connectionCheck = () => {
 
 const timer = setInterval(connectionCheck, 800);
 
-interface UserAttributes extends Optional<UserInterface, 'name'> {}
+interface UserAttributes extends Optional<UserInterface, 'id'> {}
 
 export class User
   extends Model<UserInterface, UserAttributes>
@@ -76,4 +78,34 @@ User.init(
     },
   },
   { tableName: 'users', sequelize }
+);
+
+// LOG
+interface LogAttributes extends Optional<LogInterface, 'id'> {}
+
+export class Log
+  extends Model<LogInterface, LogAttributes>
+  implements LogInterface
+{
+  public id!: number;
+  public log!: object;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Log.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    log: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      unique: false,
+    },
+  },
+  { tableName: 'logs', sequelize }
 );
