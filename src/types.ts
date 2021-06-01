@@ -1,0 +1,23 @@
+import { Request, Response, NextFunction } from 'express';
+
+export interface RouteInterface {
+  method: string;
+  path: string;
+  controller(request: Request, response: Response, next?: NextFunction): void;
+}
+
+export interface UserInterface {
+  id?: number;
+  name: string;
+  hash: string;
+}
+
+export interface SuccessResponse {
+  status: string;
+  message: string;
+}
+
+export interface ErrorResponse {
+  status: string;
+  message: string;
+}

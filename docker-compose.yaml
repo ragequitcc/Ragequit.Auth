@@ -14,6 +14,16 @@ services:
       - 'mariadb'
     networks:
       - intern
+    environment:
+      PORT: '8080' # if you want to change the app port, you need to adjust the port in app.ts and in this file @line 11;
+      DBUSER: 'authservice'
+      DBPASS: 'SuperSecurePassword420'
+      DBHOST: 'mariadb'
+      DBPORT: '3306'
+      DBRETRIES: '10'
+      DBNAME: 'ragequit_authservice'
+      NODE_MODE: 'development'
+      JWT_SECRET: '<super secret>'
   mariadb:
     container_name: 'Ragequit.MariaDB'
     image: mariadb:latest
@@ -21,12 +31,12 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: '<secure password>'
+      MYSQL_ROOT_PASSWORD: 'SuperSecurePassword69'
       MYSQL_DATABASE: 'ragequit_authservice'
       MYSQL_USER: 'authservice'
-      MYSQL_PASSWORD: '<secure password>'
-    volumes:
-      - ~/mysql:/var/lib/mysql
+      MYSQL_PASSWORD: 'SuperSecurePassword420'
+    #volumes: # uncomment if you want a persistent storage.
+    #  - ./mysql:/var/lib/mysql
     networks:
       - intern
 

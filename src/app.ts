@@ -1,27 +1,40 @@
-import express, { Express, Response, Request, Router } from 'express';
+import express, { Express, Router } from 'express';
 import morgan from 'morgan';
-import registerRoute from './routes/register';
-import loginRoute from './routes/login';
-import config from './util/config';
+import { readdir } from 'fs';
 
 const app: Express = express();
 const router: Router = Router();
 
-registerRoute(router);
-loginRoute(router);
+readdir(`${__dirname}/routes`, (error, files) => {
+  if (error) return new Error('Error Loading Routes');
+
+  Object.keys(files).forEach((value, index) => {
+    import(`${__dirname}/routes/${files[index]}`).then((route) => {
+      switch (route.method) {
+        case 'post':
+          router.post(route.path, route.controller);
+          break;
+        case 'get':
+          router.get(route.path, route.controller);
+          break;
+        case 'delete':
+          router.delete(route.path, route.controller);
+          break;
+      }
+    });
+  });
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(morgan(config.mode === 'development' ? 'dev' : 'tiny'));
+
+app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'tiny'));
 app.use(router);
-
-// router.use((req: Request, res: Response) => {
-//   res
-//     .send({
-//       error: 'not found',
-//       code: 404,
-//     })
-//     .status(404);
-// });
-
-app.listen(config.port);
+app.use((req, res) => {
+  res
+    .send({
+      error: '404 - Route Not Found',
+    })
+    .status(404);
+});
+app.listen(8080);

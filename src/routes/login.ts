@@ -1,36 +1,43 @@
-import Route from './routeInterface';
-import { comparePassword } from '../util/crypto';
-import { Request, Response, Router } from 'express';
-import { User } from '../data/authDb';
+import { Request, Response, NextFunction } from 'express';
+import { RouteInterface, UserInterface } from '../types';
+import bcrypt from 'bcrypt';
+import { User } from '../data/db';
 
-const loginRoute: Route = (router: Router) => {
-  router.post('/login', async (req: Request, res: Response) => {
-    if (!req.body.name || !req.body.pass)
-      return res.send({
-        error: 'Name Or Password Missing',
+const route: RouteInterface = {
+  method: 'post',
+  path: '/login',
+  controller: async (request: Request, response: Response) => {
+    if (!request.body.name || !request.body.pass)
+      return response.send({
+        status: 'Error',
+        message: 'Missing Username Or Password.',
       });
 
-    // logic to lookup user.
-    return User.findOne({
+    User.findOne({
       where: {
-        name: req.body.name,
+        name: request.body.name,
       },
     })
-      .then((user) => {
+      .then(async (user: UserInterface | null) => {
         if (!user)
-          return res.send({
-            error: 'User Not Found',
-          });
+          return response
+            .send({
+              status: 'Error',
+              message: 'User Not Found.',
+            })
+            .status(400);
 
-        res.send({
-          message: 'Success',
-        });
+        // make password comparison.
+        const compare = await bcrypt.compare(request.body.pass, user.hash);
+
+        console.log(compare);
+
+        response.send('ok');
       })
-      .catch((error) => {
-        console.log(error);
-        res.send(error);
-      });
-  });
+      .catch((error) => {});
+
+    response.send('nice');
+  },
 };
 
-export default loginRoute;
+export = route;
