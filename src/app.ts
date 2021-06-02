@@ -1,6 +1,7 @@
 import express, { Express, Router } from 'express';
 import morgan from 'morgan';
 import { readdir } from 'fs';
+import config from './config/config';
 
 const app: Express = express();
 const router: Router = Router();
@@ -28,7 +29,7 @@ readdir(`${__dirname}/routes`, (error, files) => {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(morgan(process.env.NODE_ENV === 'development' ? 'dev' : 'tiny'));
+app.use(morgan(config.env === 'development' ? 'dev' : 'tiny'));
 app.use(router);
 app.use((req, res) => {
   res
@@ -37,4 +38,4 @@ app.use((req, res) => {
     })
     .status(404);
 });
-app.listen(8080);
+app.listen(config.port);

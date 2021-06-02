@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { User } from '../data/db';
 import { addLog } from '../util/log';
 import jwt from 'jsonwebtoken';
+import config from '../config/config';
 
 const route: RouteInterface = {
   method: 'post',
@@ -40,8 +41,7 @@ const route: RouteInterface = {
                 roles: [],
               },
             },
-            // @ts-ignore
-            process.env.JWT_SECRET
+            config.jwt.secret
           );
 
           response.send({

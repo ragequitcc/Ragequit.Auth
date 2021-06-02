@@ -33,3 +33,19 @@ export interface DecodedJWTInterface {
     roles: string[];
   };
 }
+
+export interface ConfigInterface {
+  port: number;
+  db: {
+    user: string;
+    pass: string;
+    port: number;
+    host: string;
+    retries: number;
+    name: string;
+  };
+  jwt: {
+    secret: string;
+  };
+  env: string;
+}

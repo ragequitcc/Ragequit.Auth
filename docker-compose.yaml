@@ -9,21 +9,21 @@ services:
       context: .
     ports:
       - '8232:8080'
-    restart: always
+    restart: unless-stopped
     depends_on:
       - 'mariadb'
     networks:
       - intern
     environment:
-      PORT: '8080' # if you want to change the app port, you need to adjust the port in app.ts and in this file @line 11;
+      PoORT: '8080' # if you want to change the app port, you need to adjust the port in app.ts and in this file @line 11;
       DBUSER: 'authservice'
       DBPASS: 'SuperSecurePassword420'
       DBHOST: 'mariadb'
       DBPORT: '3306'
       DBRETRIES: '10'
       DBNAME: 'ragequit_authservice'
-      NODE_MODE: 'development'
-      JWT_SECRET: '<super secret>'
+      ENV: 'development'
+      JWTSECRET: '<super secret>'
   mariadb:
     container_name: 'Ragequit.MariaDB'
     image: mariadb:latest
