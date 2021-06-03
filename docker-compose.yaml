@@ -15,7 +15,7 @@ services:
     networks:
       - intern
     environment:
-      PoORT: '8080' # if you want to change the app port, you need to adjust the port in app.ts and in this file @line 11;
+      PORT: '8080' # if you want to change the app port, you need to adjust the port in app.ts and in this file @line 11;
       DBUSER: 'authservice'
       DBPASS: 'SuperSecurePassword420'
       DBHOST: 'mariadb'

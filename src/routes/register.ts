@@ -3,6 +3,7 @@ import { RouteInterface, UserInterface } from '../types';
 import bcrypt from 'bcrypt';
 import { User } from '../data/db';
 import { addLog } from '../util/log';
+import { signToken } from '../util/jwt';
 
 const route: RouteInterface = {
   method: 'post',
@@ -34,10 +35,12 @@ const route: RouteInterface = {
       name: request.body.name,
       hash: passwordHash,
     })
-      .then((user: UserInterface) => {
+      .then(async (user: User) => {
+        const token = await signToken(user);
         response.send({
           status: 'Success',
           message: `User ${user.name} created.`,
+          token: token,
         });
       })
       .catch((error) => {

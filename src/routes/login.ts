@@ -1,10 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import { RouteInterface, UserInterface } from '../types';
+import { Request, Response } from 'express';
+import { RouteInterface } from '../types';
 import bcrypt from 'bcrypt';
-import { User } from '../data/db';
-import { addLog } from '../util/log';
-import jwt from 'jsonwebtoken';
-import config from '../config/config';
+import { findUserByName } from '../util/db';
+import { signToken } from '../util/jwt';
 
 const route: RouteInterface = {
   method: 'post',
@@ -16,54 +14,31 @@ const route: RouteInterface = {
         message: 'Missing Username Or Password.',
       });
 
-    User.findOne({
-      where: {
-        name: request.body.name,
-      },
-    })
-      .then(async (user: UserInterface | null) => {
-        if (!user)
-          return response
-            .send({
-              status: 'Error',
-              message: 'User Not Found.',
-            })
-            .status(400);
+    const user = await findUserByName(request.body.name);
 
-        // make password comparison.
-        const compare = await bcrypt.compare(request.body.pass, user.hash);
+    if (!user)
+      return response
+        .send({
+          status: 'Error',
+          message: 'User Not Found.',
+        })
+        .status(400);
 
-        if (compare) {
-          const token = await jwt.sign(
-            {
-              user: {
-                name: user.name,
-                roles: [],
-              },
-            },
-            config.jwt.secret
-          );
+    const compare = await bcrypt.compare(request.body.pass, user.hash);
 
-          response.send({
-            status: 'Success',
-            token: token,
-          });
-        } else {
-          response.send({
-            status: 'Error',
-            message: 'Password Does Not Match.',
-          });
-        }
-      })
-      .catch((error) => {
-        addLog(error);
-        response
-          .send({
-            status: 'Error',
-            message: 'Something Went Wrong.',
-          })
-          .status(500);
+    if (compare) {
+      const token = await signToken(user);
+
+      response.send({
+        status: 'Success',
+        token: token,
       });
+    } else {
+      response.send({
+        status: 'Error',
+        message: 'Password Does Not Match.',
+      });
+    }
   },
 };
 
